@@ -79,7 +79,6 @@ var addData = function () {
 };
 
 var pinsData = addData();
-console.log(pinsData);
 
 var renderPin = function (pinData) {
   var pin = document.querySelector('#pin').content.querySelector('.map__pin').cloneNode(true);
