@@ -115,7 +115,7 @@ var renderCard = function (cardData) {
   card.querySelector('.popup__text--capacity').textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
   card.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
 
-  var features = card.querySelector('popup__features');
+  var features = card.querySelector('.popup__features');
   features.innerHTML = '';
   for (var i = 0; i < cardData.offer.features.length; i++) {
     features.insertAdjacentHTML('afterBegin', '<li class="popup__feature popup__feature--' + cardData.offer.features[i] + '></li>');
@@ -132,6 +132,6 @@ var renderCard = function (cardData) {
   return card;
 };
 
-map.insertBefore(renderCard(pinsData[0], mapFilters));
+map.insertBefore(renderCard(pinsData[0]), mapFilters);
 
 map.classList.remove('map--faded');
