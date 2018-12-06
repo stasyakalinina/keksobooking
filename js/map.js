@@ -124,7 +124,7 @@ var renderCard = function (cardData) {
   var img = card.querySelector('.popup__photos');
   img.innerHTML = '';
   for (var j = 0; j < cardData.offer.photos.length; j++) {
-    img.insertAdjacentHTML('afterBegin', '<img src="' + cardData.offer.photos[i] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
+    img.insertAdjacentHTML('afterBegin', '<img src="' + cardData.offer.photos[j] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
   }
 
   card.querySelector('.popup__description').textContent = cardData.offer.description;
