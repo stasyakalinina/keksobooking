@@ -118,7 +118,7 @@ var renderCard = function (cardData) {
   var features = card.querySelector('.popup__features');
   features.innerHTML = '';
   for (var i = 0; i < cardData.offer.features.length; i++) {
-    features.insertAdjacentHTML('afterBegin', '<li class="popup__feature popup__feature--' + cardData.offer.features[i] + '></li>');
+    features.insertAdjacentHTML('beforeEnd', '<li class="popup__feature popup__feature--' + cardData.offer.features[i] + '"></li>');
   }
 
   var img = card.querySelector('.popup__photos');
