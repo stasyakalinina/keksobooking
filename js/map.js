@@ -15,7 +15,7 @@ var inputAddress = document.querySelector('#address');
 var fieldsets = document.querySelectorAll('.ad-form__element');
 var mainPin = document.querySelector('.map__pin--main');
 var adForm = document.querySelector('.ad-form');
-var btnClosePopup = document.querySelector('.popup__close');
+// var btnClosePopup = document.querySelector('.popup__close');
 
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var types = ['palace', 'flat', 'bungalo', 'house'];
@@ -172,10 +172,11 @@ mainPin.addEventListener('mouseup', function () {
   inputAddress.value = mainPin.style.top;
 });
 
-
+/*
 var closePopup = function () {
   map.insertBefore(renderCard(pinsData[0]), mapFilters).remove();
 };
+*/
 
 var openPopup = function () {
   map.insertBefore(renderCard(pinsData[0]), mapFilters);
