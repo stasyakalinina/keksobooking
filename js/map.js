@@ -1,6 +1,9 @@
 'use strict';
 //
 var PINS_COUNT = 8;
+var PIN_TAIL = 17;
+var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
 var locationRange = {
   MIN: 130,
   MAX: 630
@@ -10,6 +13,11 @@ var timeCheck = ['12:00', '13:00', '14:00'];
 var map = document.querySelector('.map');
 var mapPins = map.querySelector('.map__pins');
 var mapFilters = map.querySelector('.map__filters-container');
+var inputAddress = document.querySelector('#address');
+
+var fieldsets = document.querySelectorAll('.ad-form__element');
+var mainPin = document.querySelector('.map__pin--main');
+var adForm = document.querySelector('.ad-form');
 
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var types = ['palace', 'flat', 'bungalo', 'house'];
@@ -80,6 +88,29 @@ var addData = function () {
 
 var pinsData = addData();
 
+var setPinClass = function () {
+  var activePin = map.querySelector('.map__pin--active');
+  if (activePin) {
+    activePin.classList.remove('map__pin--active');
+  }
+};
+
+var openPopup = function (pinData) {
+  map.insertBefore(renderCard(pinData), mapFilters);
+};
+
+var activatePin = function (pin, pinData) {
+  setPinClass();
+
+  var popup = map.querySelector('.popup');
+  if (popup) {
+    closePopup(popup);
+  }
+
+  pin.classList.add('map__pin--active');
+  openPopup(pinData);
+};
+
 var renderPin = function (pinData) {
   var pin = document.querySelector('#pin').content.querySelector('.map__pin').cloneNode(true);
   var image = pin.querySelector('img');
@@ -88,6 +119,16 @@ var renderPin = function (pinData) {
 
   pin.style.left = pinData.location.x + 'px';
   pin.style.top = pinData.location.y + 'px';
+
+  pin.addEventListener('click', function () {
+    activatePin(pin, pinData);
+  });
+
+  pin.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      activatePin(pin, pinData);
+    }
+  });
 
   return pin;
 };
@@ -101,10 +142,12 @@ var renderPins = function () {
   mapPins.appendChild(fragment);
 };
 
-renderPins();
+var closePopup = function (popup) {
+  map.removeChild(popup);
+  setPinClass();
+};
 
-// карточка
-
+// отрисовка карточки
 var renderCard = function (cardData) {
   var card = document.querySelector('#card').content.querySelector('.popup').cloneNode(true);
 
@@ -128,10 +171,71 @@ var renderCard = function (cardData) {
   }
 
   card.querySelector('.popup__description').textContent = cardData.offer.description;
-  card.querySelector('.popup__avatar').textContent = cardData.author.avatar;
+  card.querySelector('.popup__avatar').src = cardData.author.avatar;
+
+  var closeButton = card.querySelector('.popup__close');
+
+  closeButton.addEventListener('click', function () {
+    closePopup(card);
+  });
+
+  closeButton.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      closePopup(card);
+    }
+  });
+
   return card;
 };
 
-map.insertBefore(renderCard(pinsData[0]), mapFilters);
 
-map.classList.remove('map--faded');
+var setDisableFieldset = function () {
+  for (var i = 0; i < fieldsets.length; i++) {
+    fieldsets[i].setAttribute('disabled', 'disabled');
+  }
+};
+
+// Разблокируем все поля
+var removeDisableFieldset = function () {
+  for (var i = 0; i < fieldsets.length; i++) {
+    fieldsets[i].removeAttribute('disabled');
+  }
+};
+
+var setAdressValue = function () {
+  var leftOffset = Math.round(parseInt(mainPin.style.left, 10) + mainPin.offsetWidth / 2);
+  var topOffset = 0;
+
+  if (!map.classList.contains('map--faded')) {
+    topOffset = Math.round(parseInt(mainPin.style.top, 10) + mainPin.offsetHeight + PIN_TAIL);
+  } else {
+    topOffset = Math.round(parseInt(mainPin.style.top, 10) + mainPin.offsetHeight + 2);
+  }
+  inputAddress.value = leftOffset + ', ' + topOffset;
+};
+
+var onMainPinMouseUp = function () {
+  map.classList.remove('map--faded');
+  removeDisableFieldset();
+  adForm.classList.remove('ad-form--disabled');
+  renderPins();
+  setAdressValue();
+  mainPin.removeEventListener('mouseup', onMainPinMouseUp);
+};
+
+// при нажатии мыши активируется карта, разблокируются поля формы и отрисовываются пины
+mainPin.addEventListener('mouseup', onMainPinMouseUp);
+
+// устанавливает значение главного пина при неактивной странице
+setAdressValue();
+
+// Все поля блокируем по умолчанию
+setDisableFieldset();
+
+// закрываем попап по ESC
+document.addEventListener('keydown', function (evt) {
+  var popup = map.querySelector('.popup');
+  if (evt.keyCode === ESC_KEYCODE && popup) {
+    closePopup(popup);
+  }
+});
