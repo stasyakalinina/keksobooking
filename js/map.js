@@ -15,9 +15,10 @@ var mapPins = map.querySelector('.map__pins');
 var mapFilters = map.querySelector('.map__filters-container');
 var inputAddress = document.querySelector('#address');
 
-var fieldsets = document.querySelectorAll('.ad-form__element');
-var mainPin = document.querySelector('.map__pin--main');
 var adForm = document.querySelector('.ad-form');
+var fieldsets = adForm.querySelectorAll('.ad-form__element');
+var mainPin = map.querySelector('.map__pin--main');
+
 
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var types = ['palace', 'flat', 'bungalo', 'house'];
@@ -47,12 +48,15 @@ var ROOM_CAPACITY = {
   '3': ['3', '2', '1'],
   '100': ['0']
 };
-var timein = document.querySelector('#timein');
-var timeout = document.querySelector('#timeout');
-var type = document.querySelector('#type');
-var price = document.querySelector('#price');
-var roomNumber = document.querySelector('#room_number');
-var capacity = document.querySelector('#capacity');
+var timein = adForm.querySelector('#timein');
+var timeout = adForm.querySelector('#timeout');
+var type = adForm.querySelector('#type');
+var price = adForm.querySelector('#price');
+var roomNumber = adForm.querySelector('#room_number');
+var capacity = adForm.querySelector('#capacity');
+var submitBtn = adForm.querySelector('.ad-form__submit');
+var resetBtn = adForm.querySelector('.ad-form__reset');
+var fieldsForm = adForm.querySelectorAll('.ad-form input, .ad-form select');
 
 
 var featuresArr = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -164,6 +168,11 @@ var renderPins = function () {
   mapPins.appendChild(fragment);
 };
 
+/*
+var removePins = function () {
+  map.removeChild(mapPins);
+};
+*/
 var closePopup = function (popup) {
   map.removeChild(popup);
   setPinClass();
@@ -209,7 +218,6 @@ var renderCard = function (cardData) {
 
   return card;
 };
-
 
 var setDisableFieldset = function () {
   for (var i = 0; i < fieldsets.length; i++) {
@@ -296,3 +304,47 @@ var timeOutChangeHandler = function () {
 
 timein.addEventListener('change', timeInChangeHandler);
 timeout.addEventListener('change', timeOutChangeHandler);
+
+// успешная отправка
+var showSuccess = function () {
+  var successAd = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
+  adForm.appendChild(successAd);
+};
+
+submitBtn.addEventListener('input', function (evt) {
+  evt.preventDefault();
+  if (adForm.validity.valid) {
+    showSuccess();
+  } else {
+    showError();
+  }
+});
+
+// показ сообщения об ошибке
+var showError = function () {
+  var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
+  var errorCloseBtn = errorAd.querySelector('.error__button');
+  adForm.appendChild(errorAd);
+  errorCloseBtn.addEventListener('click', function () {
+    adForm.removeChild(errorAd);
+    onMainPinMouseUp();
+  });
+};
+
+// сброс значений полей
+var resetFormFields = function () {
+  fieldsForm.forEach(function (item) {
+    item.value = '';
+    item.placeholder = '';
+  });
+};
+
+resetBtn.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  adForm.reset();
+  resetFormFields();
+  setDisableFieldset();
+  map.classList.add('map--faded');
+  adForm.classList.add('ad-form--disabled');
+  closePopup();
+});
