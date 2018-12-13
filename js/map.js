@@ -56,8 +56,7 @@ var roomNumber = adForm.querySelector('#room_number');
 var capacity = adForm.querySelector('#capacity');
 var submitBtn = adForm.querySelector('.ad-form__submit');
 var resetBtn = adForm.querySelector('.ad-form__reset');
-var fieldsForm = adForm.querySelectorAll('.ad-form input, .ad-form select');
-
+// var fieldsForm = adForm.querySelectorAll('.ad-form input, .ad-form select');
 
 var featuresArr = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var photosArr = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
@@ -168,11 +167,14 @@ var renderPins = function () {
   mapPins.appendChild(fragment);
 };
 
-/*
 var removePins = function () {
-  map.removeChild(mapPins);
+  var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+  for (var i = 0; i < pins.length; i++) {
+    mapPins.removeChild(pins[i]);
+  }
 };
-*/
+
 var closePopup = function (popup) {
   map.removeChild(popup);
   setPinClass();
@@ -311,7 +313,7 @@ var showSuccess = function () {
   adForm.appendChild(successAd);
 };
 
-submitBtn.addEventListener('input', function (evt) {
+submitBtn.addEventListener('submit', function (evt) {
   evt.preventDefault();
   if (adForm.validity.valid) {
     showSuccess();
@@ -331,20 +333,16 @@ var showError = function () {
   });
 };
 
-// сброс значений полей
-var resetFormFields = function () {
-  fieldsForm.forEach(function (item) {
-    item.value = '';
-    item.placeholder = '';
-  });
-};
-
 resetBtn.addEventListener('click', function (evt) {
   evt.preventDefault();
   adForm.reset();
-  resetFormFields();
   setDisableFieldset();
   map.classList.add('map--faded');
   adForm.classList.add('ad-form--disabled');
-  closePopup();
+  removePins();
+
+  var popup = map.querySelector('.popup');
+  if (popup) {
+    closePopup(popup);
+  }
 });
