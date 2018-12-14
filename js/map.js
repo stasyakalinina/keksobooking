@@ -1,7 +1,7 @@
 'use strict';
 //
 var PINS_COUNT = 8;
-var PIN_TAIL = 17;
+var PIN_TAIL = 19;
 var ENTER_KEYCODE = 13;
 var ESC_KEYCODE = 27;
 var locationRange = {
@@ -264,6 +264,7 @@ var setInactiveState = function () {
   if (popup) {
     closePopup(popup);
   }
+  setAdressValue();
 };
 
 // перемещение главной метки
@@ -281,8 +282,8 @@ mainPin.addEventListener('mousedown', function (evt) {
       max: map.offsetWidth - mainPin.offsetWidth
     },
     y: {
-      min: locationRange.MIN,
-      max: locationRange.MAX
+      min: locationRange.MIN - mainPin.offsetHeight - PIN_TAIL,
+      max: locationRange.MAX - mainPin.offsetHeight - PIN_TAIL
     }
   };
 
