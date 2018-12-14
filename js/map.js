@@ -274,18 +274,18 @@ mainPin.addEventListener('mousedown', function (evt) {
     x: evt.clientX,
     y: evt.clientY
   };
-  /*
+
   var limitCoords = {
     x: {
       min: 0,
-      max: map.offsetWidth
+      max: map.offsetWidth - mainPin.offsetWidth
     },
     y: {
       min: locationRange.MIN,
       max: locationRange.MAX
     }
   };
-*/
+
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
@@ -299,12 +299,40 @@ mainPin.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-    mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+    // высчитываем координаты смещения и ставим ограничения
+    var xCoordinate = mainPin.offsetLeft - shift.x;
+    var yCoordinate = mainPin.offsetTop - shift.y;
+
+    if (xCoordinate > limitCoords.x.min && xCoordinate < limitCoords.x.max) {
+      mainPin.style.left = xCoordinate + 'px';
+    }
+    if (yCoordinate > limitCoords.y.min && yCoordinate < limitCoords.y.max) {
+      mainPin.style.top = yCoordinate + 'px';
+    }
   };
 
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - upEvt.clientX,
+      y: startCoords.y - upEvt.clientY
+    };
+
+    startCoords = {
+      x: upEvt.clientX,
+      y: upEvt.clientY
+    };
+
+    var xCoordinate = mainPin.offsetLeft - shift.x;
+    var yCoordinate = mainPin.offsetTop - shift.y;
+
+    if (xCoordinate > limitCoords.x.min && xCoordinate < limitCoords.x.max) {
+      mainPin.style.left = xCoordinate + 'px';
+    }
+    if (yCoordinate > limitCoords.y.min && yCoordinate < limitCoords.y.max) {
+      mainPin.style.top = yCoordinate + 'px';
+    }
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
