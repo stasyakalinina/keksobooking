@@ -56,7 +56,6 @@ var roomNumber = adForm.querySelector('#room_number');
 var capacity = adForm.querySelector('#capacity');
 var submitBtn = adForm.querySelector('.ad-form__submit');
 var resetBtn = adForm.querySelector('.ad-form__reset');
-// var fieldsForm = adForm.querySelectorAll('.ad-form input, .ad-form select');
 
 var featuresArr = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var photosArr = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
@@ -169,10 +168,9 @@ var renderPins = function () {
 
 var removePins = function () {
   var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
-
-  for (var i = 0; i < pins.length; i++) {
-    mapPins.removeChild(pins[i]);
-  }
+  pins.forEach(function (item) {
+    mapPins.removeChild(item);
+  });
 };
 
 var closePopup = function (popup) {
@@ -222,16 +220,16 @@ var renderCard = function (cardData) {
 };
 
 var setDisableFieldset = function () {
-  for (var i = 0; i < fieldsets.length; i++) {
-    fieldsets[i].setAttribute('disabled', 'disabled');
-  }
+  fieldsets.forEach(function (item) {
+    item.setAttribute('disabled', 'disabled');
+  });
 };
 
 // Разблокируем все поля
 var removeDisableFieldset = function () {
-  for (var i = 0; i < fieldsets.length; i++) {
-    fieldsets[i].removeAttribute('disabled');
-  }
+  fieldsets.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
 };
 
 var setAdressValue = function () {
