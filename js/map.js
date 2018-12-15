@@ -337,6 +337,7 @@ mainPin.addEventListener('mousedown', function (evt) {
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
+    setAdressValue();
   };
 
   document.addEventListener('mousemove', onMouseMove);
