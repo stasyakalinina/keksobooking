@@ -1,7 +1,7 @@
 'use strict';
 //
 var PINS_COUNT = 8;
-var PIN_TAIL = 17;
+var PIN_TAIL = 19;
 var ENTER_KEYCODE = 13;
 var ESC_KEYCODE = 27;
 var locationRange = {
@@ -56,7 +56,6 @@ var roomNumber = adForm.querySelector('#room_number');
 var capacity = adForm.querySelector('#capacity');
 var submitBtn = adForm.querySelector('.ad-form__submit');
 var resetBtn = adForm.querySelector('.ad-form__reset');
-// var fieldsForm = adForm.querySelectorAll('.ad-form input, .ad-form select');
 
 var featuresArr = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var photosArr = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
@@ -169,10 +168,9 @@ var renderPins = function () {
 
 var removePins = function () {
   var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
-
-  for (var i = 0; i < pins.length; i++) {
-    mapPins.removeChild(pins[i]);
-  }
+  pins.forEach(function (item) {
+    mapPins.removeChild(item);
+  });
 };
 
 var closePopup = function (popup) {
@@ -222,16 +220,16 @@ var renderCard = function (cardData) {
 };
 
 var setDisableFieldset = function () {
-  for (var i = 0; i < fieldsets.length; i++) {
-    fieldsets[i].setAttribute('disabled', 'disabled');
-  }
+  fieldsets.forEach(function (item) {
+    item.setAttribute('disabled', 'disabled');
+  });
 };
 
 // Разблокируем все поля
 var removeDisableFieldset = function () {
-  for (var i = 0; i < fieldsets.length; i++) {
-    fieldsets[i].removeAttribute('disabled');
-  }
+  fieldsets.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
 };
 
 var setAdressValue = function () {
@@ -246,17 +244,106 @@ var setAdressValue = function () {
   inputAddress.value = leftOffset + ', ' + topOffset;
 };
 
-var onMainPinMouseUp = function () {
+// функция установки активного состояния
+var setActiveState = function () {
   map.classList.remove('map--faded');
   removeDisableFieldset();
   adForm.classList.remove('ad-form--disabled');
   renderPins();
   setAdressValue();
-  mainPin.removeEventListener('mouseup', onMainPinMouseUp);
 };
 
-// при нажатии мыши активируется карта, разблокируются поля формы и отрисовываются пины
-mainPin.addEventListener('mouseup', onMainPinMouseUp);
+// функция установки НЕактивного состояния
+var setInactiveState = function () {
+  setDisableFieldset();
+  map.classList.add('map--faded');
+  adForm.classList.add('ad-form--disabled');
+  removePins();
+
+  var popup = map.querySelector('.popup');
+  if (popup) {
+    closePopup(popup);
+  }
+  setAdressValue();
+};
+
+// перемещение главной метки
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var limitCoords = {
+    x: {
+      min: 0,
+      max: map.offsetWidth - mainPin.offsetWidth
+    },
+    y: {
+      min: locationRange.MIN - mainPin.offsetHeight - PIN_TAIL,
+      max: locationRange.MAX - mainPin.offsetHeight - PIN_TAIL
+    }
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    // высчитываем координаты смещения и ставим ограничения
+    var xCoordinate = mainPin.offsetLeft - shift.x;
+    var yCoordinate = mainPin.offsetTop - shift.y;
+
+    if (xCoordinate > limitCoords.x.min && xCoordinate < limitCoords.x.max) {
+      mainPin.style.left = xCoordinate + 'px';
+    }
+    if (yCoordinate > limitCoords.y.min && yCoordinate < limitCoords.y.max) {
+      mainPin.style.top = yCoordinate + 'px';
+    }
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - upEvt.clientX,
+      y: startCoords.y - upEvt.clientY
+    };
+
+    startCoords = {
+      x: upEvt.clientX,
+      y: upEvt.clientY
+    };
+
+    var xCoordinate = mainPin.offsetLeft - shift.x;
+    var yCoordinate = mainPin.offsetTop - shift.y;
+
+    if (xCoordinate > limitCoords.x.min && xCoordinate < limitCoords.x.max) {
+      mainPin.style.left = xCoordinate + 'px';
+    }
+    if (yCoordinate > limitCoords.y.min && yCoordinate < limitCoords.y.max) {
+      mainPin.style.top = yCoordinate + 'px';
+    }
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
+  setActiveState();
+});
 
 // устанавливает значение главного пина при неактивной странице
 setAdressValue();
@@ -329,20 +416,13 @@ var showError = function () {
   adForm.appendChild(errorAd);
   errorCloseBtn.addEventListener('click', function () {
     adForm.removeChild(errorAd);
-    onMainPinMouseUp();
+    setActiveState();
   });
 };
 
+// сброс полей формы, попапа и пинов кнопкой очистить
 resetBtn.addEventListener('click', function (evt) {
   evt.preventDefault();
   adForm.reset();
-  setDisableFieldset();
-  map.classList.add('map--faded');
-  adForm.classList.add('ad-form--disabled');
-  removePins();
-
-  var popup = map.querySelector('.popup');
-  if (popup) {
-    closePopup(popup);
-  }
+  setInactiveState();
 });
