@@ -84,7 +84,7 @@
 
     successAd.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.utils.esc) {
-        removeSuccessMessage();
+        removeSuccessMessage(main, successAd);
       }
     });
   };

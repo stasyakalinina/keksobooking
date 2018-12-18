@@ -6,7 +6,7 @@
   var REQUEST_TIMEOUT = 10000;
 
   // фнкция загрузки даннных с сервера и на сервер с параметрами успешной отпраки, ошибки, метода и параметров
-  var sendRequest = function (onSuccess, onError, method, URL, data) {
+  var sendRequest = function (onSuccess, onError, method, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
