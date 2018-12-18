@@ -75,25 +75,19 @@
     adForm.appendChild(successAd);
   };
 
+  // обрабатываем отправку данных формы
   submitBtn.addEventListener('submit', function (evt) {
-    evt.preventDefault();
+    var data = new FormData(adForm);
+    /*
     if (adForm.validity.valid) {
       showSuccess();
     } else {
       showError();
     }
+    */
+    window.backend.upload(data, showSuccess);
+    evt.preventDefault();
   });
-
-  // показ сообщения об ошибке
-  var showError = function () {
-    var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
-    var errorCloseBtn = errorAd.querySelector('.error__button');
-    adForm.appendChild(errorAd);
-    errorCloseBtn.addEventListener('click', function () {
-      adForm.removeChild(errorAd);
-      window.utils.setActiveState();
-    });
-  };
 
   // сброс полей формы, попапа и пинов кнопкой очистить
   resetBtn.addEventListener('click', function (evt) {
