@@ -5,25 +5,10 @@
   var POST_URL = 'https://js.dump.academy/keksobooking/';
   var REQUEST_TIMEOUT = 10000;
 
-  // передаем данные на сервер
-  var uploadData = function (data, onSuccess) {
+  // фнкция загрузки даннных с сервера и на сервер с параметрами успешной отпраки, ошибки, метода и параметров
+  var sendRequest = function (onSuccess, onError, method, URL, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-
-    xhr.addEventListener('load', function () {
-      onSuccess(xhr.response);
-    });
-
-    xhr.open('POST', POST_URL);
-    xhr.send(data);
-  };
-
-  // загружаем данные с сервера
-  var loadData = function (onSuccess, onError) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-
-    xhr.open('GET', GET_URL);
 
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
@@ -39,7 +24,8 @@
       onError('Запрос не успел выполниться за ' + REQUEST_TIMEOUT + 'мс');
     });
 
-    xhr.send();
+    xhr.open(method, (method === 'GET') ? GET_URL : POST_URL);
+    xhr.send(data);
   };
 
   // обрабатываем ошибки
@@ -61,25 +47,37 @@
 
     return errorMessage;
   };
-  /*
-  var successHandler = function () {
 
-  }
+  var closeErrorMessage = function (main, errorAd) {
+    main.removeChild(errorAd);
+    window.utils.setActiveState();
+  };
 
-  var errorHandler = function () {
+  var showErrorMessage = function () {
     var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
     var errorCloseBtn = errorAd.querySelector('.error__button');
     var main = document.querySelector('main');
-    main.appendChild(errorAd);
 
-    errorCloseBtn.addEventListener('click', function () {
-      main.removeChild(errorAd);
-      window.utils.setActiveState();
+    main.appendChild(errorAd);
+    errorAd.querySelector('.error__message').textContent = getErrorMessage(status);
+
+    errorCloseBtn.addEventListener('click', closeErrorMessage(main, errorAd));
+
+    errorAd.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.utils.esc) {
+        closeErrorMessage(main, errorAd);
+      }
     });
   };
-  */
+
   window.backend = {
-    upload: uploadData,
-    load: loadData
+    save: function (onSuccess, onError, method, data) {
+      sendRequest(onSuccess, onError, method, data);
+    },
+    load: function (onSuccess, onError, method) {
+      sendRequest(onSuccess, onError, method);
+    },
+    onError: showErrorMessage,
+    closeError: closeErrorMessage
   };
 })();

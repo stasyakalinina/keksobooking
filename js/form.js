@@ -25,6 +25,7 @@
     '3': ['3', '2', '1'],
     '100': ['0']
   };
+
   var adForm = document.querySelector('.ad-form');
   var timein = adForm.querySelector('#timein');
   var timeout = adForm.querySelector('#timeout');
@@ -69,23 +70,29 @@
   timein.addEventListener('change', timeInChangeHandler);
   timeout.addEventListener('change', timeOutChangeHandler);
 
-  // успешная отправка
-  var showSuccess = function () {
+  var removeSuccessMessage = function (main, successAd) {
+    main.removeChild(successAd);
+    adForm.reset();
+    window.utils.setInactiveState();
+  };
+  // показываем сообщение об успешной отправке и удаляем это сообщение по клику на нем
+  var showSuccessMessage = function () {
     var successAd = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
-    adForm.appendChild(successAd);
+    var main = document.querySelector('main');
+    main.appendChild(successAd);
+    successAd.addEventListener('click', removeSuccessMessage(main, successAd));
+
+    successAd.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.utils.esc) {
+        removeSuccessMessage();
+      }
+    });
   };
 
   // обрабатываем отправку данных формы
   submitBtn.addEventListener('submit', function (evt) {
     var data = new FormData(adForm);
-    /*
-    if (adForm.validity.valid) {
-      showSuccess();
-    } else {
-      showError();
-    }
-    */
-    window.backend.upload(data, showSuccess);
+    window.backend.load(showSuccessMessage, window.backend.onError, 'POST', data);
     evt.preventDefault();
   });
 

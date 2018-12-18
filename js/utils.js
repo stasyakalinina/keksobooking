@@ -44,7 +44,6 @@
     map.classList.remove('map--faded');
     removeDisableFieldset();
     window.form.adForm.classList.remove('ad-form--disabled');
-    window.map.renderPins();
     window.map.setAdressValue();
   };
 
