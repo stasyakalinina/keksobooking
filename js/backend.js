@@ -47,12 +47,12 @@
 
     return errorMessage;
   };
-
+  /*
   var closeErrorMessage = function (main, errorAd) {
     main.removeChild(errorAd);
     window.utils.setActiveState();
   };
-
+  */
   var showErrorMessage = function () {
     var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
     var errorCloseBtn = errorAd.querySelector('.error__button');
@@ -61,11 +61,15 @@
     main.appendChild(errorAd);
     errorAd.querySelector('.error__message').textContent = getErrorMessage(status);
 
-    errorCloseBtn.addEventListener('click', closeErrorMessage(main, errorAd));
+    errorCloseBtn.addEventListener('click', function () {
+      main.removeChild(errorAd);
+      window.utils.setActiveState();
+    });
 
-    errorAd.addEventListener('keydown', function (evt) {
+    document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.utils.esc) {
-        closeErrorMessage(main, errorAd);
+        main.removeChild(errorAd);
+        window.utils.setActiveState();
       }
     });
   };
@@ -77,7 +81,6 @@
     load: function (onSuccess, onError, method) {
       sendRequest(onSuccess, onError, method);
     },
-    onError: showErrorMessage,
-    closeError: closeErrorMessage
+    onError: showErrorMessage
   };
 })();
