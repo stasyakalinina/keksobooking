@@ -25,6 +25,7 @@
     '3': ['3', '2', '1'],
     '100': ['0']
   };
+
   var adForm = document.querySelector('.ad-form');
   var timein = adForm.querySelector('#timein');
   var timeout = adForm.querySelector('#timeout');
@@ -69,31 +70,34 @@
   timein.addEventListener('change', timeInChangeHandler);
   timeout.addEventListener('change', timeOutChangeHandler);
 
-  // успешная отправка
-  var showSuccess = function () {
+  // показываем сообщение об успешной отправке и удаляем это сообщение по клику на нем
+  var showSuccessMessage = function () {
     var successAd = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
-    adForm.appendChild(successAd);
-  };
+    var main = document.querySelector('main');
+    main.appendChild(successAd);
 
-  submitBtn.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    if (adForm.validity.valid) {
-      showSuccess();
-    } else {
-      showError();
-    }
-  });
+    successAd.addEventListener('click', function () {
+      main.removeChild(successAd);
+      adForm.reset();
+      window.utils.returnMainPin();
+      window.utils.setInactiveState();
+    });
 
-  // показ сообщения об ошибке
-  var showError = function () {
-    var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
-    var errorCloseBtn = errorAd.querySelector('.error__button');
-    adForm.appendChild(errorAd);
-    errorCloseBtn.addEventListener('click', function () {
-      adForm.removeChild(errorAd);
-      window.utils.setActiveState();
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.utils.esc) {
+        main.removeChild(successAd);
+        adForm.reset();
+        window.utils.setInactiveState();
+      }
     });
   };
+
+  // обрабатываем отправку данных формы
+  submitBtn.addEventListener('click', function (evt) {
+    var data = new FormData(adForm);
+    window.backend.save(showSuccessMessage, window.backend.onError, 'POST', data);
+    evt.preventDefault();
+  });
 
   // сброс полей формы, попапа и пинов кнопкой очистить
   resetBtn.addEventListener('click', function (evt) {

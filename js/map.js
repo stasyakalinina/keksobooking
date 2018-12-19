@@ -1,14 +1,49 @@
 'use strict';
 (function () {
-  var PIN_TAIL = 19;
+  var PIN_TAIL = 18;
+  var PINS_AMOUNT = 5;
+  var LocationRange = {
+    MIN: 130,
+    MAX: 630
+  };
+
   var map = document.querySelector('.map');
   var mapPins = map.querySelector('.map__pins');
   var mapFilters = map.querySelector('.map__filters-container');
   var mainPin = map.querySelector('.map__pin--main');
   var inputAddress = document.querySelector('#address');
+  var isLoadData = false;
 
   // данные для пинов
-  var pinsData = window.data.addData();
+  var pinsData = [];
+
+  // функция успешной загрузки данных для отрисовки пинов и отрисовка пигов
+  var onSuccess = function (resultRequest) {
+    // проверяем пришедшие данные на содержание ключа offer, если он есть, то добавляем элемент в массив с данными
+    if (resultRequest) {
+      resultRequest.forEach(function (item) {
+        if (item.offer) {
+          pinsData.push(item);
+        }
+      });
+    }
+    var selectedPinsArray = pinsData.slice(0, PINS_AMOUNT);
+    renderPins(selectedPinsArray);
+    isLoadData = true;
+  };
+
+  // Обработчик клика на главном указателе карты
+  var onMapPinMainClick = function () {
+    window.utils.setActiveState();
+    // Загрузка информации об объявлениях и добавление указателей на карту
+    window.backend.load(onSuccess, window.backend.onError, 'GET');
+
+    if (isLoadData) {
+      mainPin.removeEventListener('click', onMapPinMainClick);
+    }
+  };
+
+  mainPin.addEventListener('click', onMapPinMainClick);
 
   var setPinClass = function () {
     var activePin = map.querySelector('.map__pin--active');
@@ -17,6 +52,7 @@
     }
   };
 
+  // показываем попап
   var openPopup = function (pinData) {
     map.insertBefore(window.card.render(pinData), mapFilters);
   };
@@ -34,11 +70,11 @@
   };
 
   // отрисовываем пины
-  var renderPins = function () {
+  var renderPins = function (arrPins) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < pinsData.length; i++) {
-      fragment.appendChild(window.pin.render(pinsData[i]));
+    for (var i = 0; i < arrPins.length; i++) {
+      fragment.appendChild(window.pin.render(arrPins[i]));
     }
     mapPins.appendChild(fragment);
   };
@@ -48,6 +84,7 @@
     pins.forEach(function (item) {
       mapPins.removeChild(item);
     });
+    window.utils.returnMainPin();
   };
 
   var closePopup = function (popup) {
@@ -55,7 +92,7 @@
     setPinClass();
   };
 
-  //
+  // задаем координаты для поля адрес
   var setAdressValue = function () {
     var leftOffset = Math.round(parseInt(mainPin.style.left, 10) + mainPin.offsetWidth / 2);
     var topOffset = 0;
@@ -83,8 +120,8 @@
         max: map.offsetWidth - mainPin.offsetWidth
       },
       y: {
-        min: window.data.locationRange.MIN - mainPin.offsetHeight - PIN_TAIL,
-        max: window.data.locationRange.MAX - mainPin.offsetHeight - PIN_TAIL
+        min: LocationRange.MIN - mainPin.offsetHeight - PIN_TAIL,
+        max: LocationRange.MAX - mainPin.offsetHeight - PIN_TAIL
       }
     };
 
@@ -143,8 +180,6 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-
-    window.utils.setActiveState();
   });
 
   // устанавливает значение главного пина при неактивной странице
@@ -161,7 +196,6 @@
   window.map = {
     closePopup: closePopup,
     activatePin: activatePin,
-    renderPins: renderPins,
     removePins: removePins,
     setAdressValue: setAdressValue
   };
