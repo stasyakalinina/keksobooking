@@ -47,12 +47,7 @@
 
     return errorMessage;
   };
-  /*
-  var closeErrorMessage = function (main, errorAd) {
-    main.removeChild(errorAd);
-    window.utils.setActiveState();
-  };
-  */
+
   var showErrorMessage = function () {
     var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
     var errorCloseBtn = errorAd.querySelector('.error__button');
