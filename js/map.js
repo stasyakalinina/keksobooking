@@ -165,10 +165,17 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-
-    window.utils.setActiveState();
-    window.backend.load(onSuccess, window.backend.onError, 'GET');
   });
+
+  // Обработчик клика на главном указателе карты
+  var onMapPinMainClick = function () {
+    window.utils.setActiveState();
+    // Загрузка информации об объявлениях и добавление указателей на карту
+    window.backend.load(onSuccess, window.backend.onError, 'GET');
+    mainPin.removeEventListener('click', onMapPinMainClick);
+  };
+
+  mainPin.addEventListener('click', onMapPinMainClick);
 
   // устанавливает значение главного пина при неактивной странице
   setAdressValue();
