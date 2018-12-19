@@ -99,7 +99,7 @@
   };
 
   // обрабатываем отправку данных формы
-  submitBtn.addEventListener('submit', function (evt) {
+  submitBtn.addEventListener('click', function (evt) {
     var data = new FormData(adForm);
     window.backend.save(showSuccessMessage, window.backend.onError, 'POST', data);
     evt.preventDefault();
