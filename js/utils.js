@@ -3,6 +3,11 @@
 (function () {
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
+
+  var startCoordMainPin = {
+    X: 570,
+    Y: 375
+  };
   var map = document.querySelector('.map');
   var fieldsets = document.querySelectorAll('.ad-form__element');
 
@@ -61,6 +66,12 @@
     window.map.setAdressValue();
   };
 
+  var returnMainPin = function () {
+    var mainPin = map.querySelector('.map__pin--main');
+    mainPin.style.left = startCoordMainPin.X + 'px';
+    mainPin.style.top = startCoordMainPin.Y + 'px';
+  };
+
   window.utils = {
     enter: ENTER_KEYCODE,
     esc: ESC_KEYCODE,
@@ -68,6 +79,7 @@
     shuffleArray: shuffleArray,
     setActiveState: setActiveState,
     setInactiveState: setInactiveState,
-    setDisableFieldset: setDisableFieldset
+    setDisableFieldset: setDisableFieldset,
+    returnMainPin: returnMainPin
   };
 })();

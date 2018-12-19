@@ -12,13 +12,13 @@
   var mapFilters = map.querySelector('.map__filters-container');
   var mainPin = map.querySelector('.map__pin--main');
   var inputAddress = document.querySelector('#address');
+  var isLoadData = false;
 
   // данные для пинов
   var pinsData = [];
 
   // функция успешной загрузки данных для отрисовки пинов и отрисовка пигов
   var onSuccess = function (resultRequest) {
-
     // проверяем пришедшие данные на содержание ключа offer, если он есть, то добавляем элемент в массив с данными
     if (resultRequest) {
       resultRequest.forEach(function (item) {
@@ -29,7 +29,21 @@
     }
     var selectedPinsArray = pinsData.slice(0, PINS_AMOUNT);
     renderPins(selectedPinsArray);
+    isLoadData = true;
   };
+
+  // Обработчик клика на главном указателе карты
+  var onMapPinMainClick = function () {
+    window.utils.setActiveState();
+    // Загрузка информации об объявлениях и добавление указателей на карту
+    window.backend.load(onSuccess, window.backend.onError, 'GET');
+
+    if (isLoadData) {
+      mainPin.removeEventListener('click', onMapPinMainClick);
+    }
+  };
+
+  mainPin.addEventListener('click', onMapPinMainClick);
 
   var setPinClass = function () {
     var activePin = map.querySelector('.map__pin--active');
@@ -70,6 +84,7 @@
     pins.forEach(function (item) {
       mapPins.removeChild(item);
     });
+    window.utils.returnMainPin();
   };
 
   var closePopup = function (popup) {
@@ -166,16 +181,6 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
-
-  // Обработчик клика на главном указателе карты
-  var onMapPinMainClick = function () {
-    window.utils.setActiveState();
-    // Загрузка информации об объявлениях и добавление указателей на карту
-    window.backend.load(onSuccess, window.backend.onError, 'GET');
-    mainPin.removeEventListener('click', onMapPinMainClick);
-  };
-
-  mainPin.addEventListener('click', onMapPinMainClick);
 
   // устанавливает значение главного пина при неактивной странице
   setAdressValue();

@@ -70,13 +70,6 @@
   timein.addEventListener('change', timeInChangeHandler);
   timeout.addEventListener('change', timeOutChangeHandler);
 
-  /*
-  var removeSuccessMessage = function () {
-    main.removeChild(successAd);
-    adForm.reset();
-    window.utils.setInactiveState();
-  };
-  */
   // показываем сообщение об успешной отправке и удаляем это сообщение по клику на нем
   var showSuccessMessage = function () {
     var successAd = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
@@ -86,6 +79,7 @@
     successAd.addEventListener('click', function () {
       main.removeChild(successAd);
       adForm.reset();
+      window.utils.returnMainPin();
       window.utils.setInactiveState();
     });
 
