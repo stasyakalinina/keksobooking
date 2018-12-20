@@ -61,12 +61,13 @@
     window.map.removePins();
     window.map.closePopup();
     window.map.setAdressValue();
+    window.map.mainPin.addEventListener('mouseup', window.map.onMapPinMainMouseUp);
   };
 
   var returnMainPin = function () {
-    var mainPin = map.querySelector('.map__pin--main');
-    mainPin.style.left = startCoordMainPin.X + 'px';
-    mainPin.style.top = startCoordMainPin.Y + 'px';
+    // var mainPin = map.querySelector('.map__pin--main');
+    window.map.mainPin.style.left = startCoordMainPin.X + 'px';
+    window.map.mainPin.style.top = startCoordMainPin.Y + 'px';
   };
 
   var debounce = function (cb) {

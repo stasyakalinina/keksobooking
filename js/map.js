@@ -32,19 +32,20 @@
     isLoadData = true;
   };
 
-  // Обработчик клика на главном указателе карты
-  var onMapPinMainClick = function () {
+  // Обработываем событие mouseup на главном указателе карты
+  var onMapPinMainMouseUp = function () {
     window.utils.setActiveState();
     // Загрузка информации об объявлениях и добавление указателей на карту
-    window.backend.load(onSuccess, window.backend.onError, 'GET');
+    window.backend.load(onSuccess, 'GET');
 
     if (isLoadData) {
-      mainPin.removeEventListener('click', onMapPinMainClick);
+      mainPin.removeEventListener('mouseup', onMapPinMainMouseUp);
     }
   };
 
-  mainPin.addEventListener('click', onMapPinMainClick);
+  mainPin.addEventListener('mouseup', onMapPinMainMouseUp);
 
+  // проверяем есть ли активный класс у пина и его убираем
   var setPinClass = function () {
     var activePin = map.querySelector('.map__pin--active');
     if (activePin) {
@@ -198,8 +199,14 @@
   window.map = {
     closePopup: closePopup,
     activatePin: activatePin,
+    renderPins: renderPins,
     removePins: removePins,
+    pinsData: function () {
+      return pinsData;
+    },
     setAdressValue: setAdressValue,
-    pinsAmount: PINS_AMOUNT
+    pinsLimit: PINS_AMOUNT,
+    mainPin: mainPin,
+    onMapPinMainMouseUp: onMapPinMainMouseUp
   };
 })();

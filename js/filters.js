@@ -9,7 +9,6 @@
 
   var updatePins = function (ads) {
     var filteredAds = ads.slice();
-    // console.log(filteredAds);
 
     var selectFilters = filtersForm.querySelectorAll('select');
     var checkboxFilters = filtersForm.querySelectorAll('input[type=checkbox]:checked');
@@ -48,7 +47,6 @@
         if (item.value !== 'any') {
           if (item.value !== 'housing-price') {
             filteredAds = filterByValue(item, FilterRules[item.id]);
-            // console.log('что-то отфильтровалось');
           } else {
             filteredAds = filterByPrice(item);
           }
@@ -63,14 +61,14 @@
     }
 
     if (filteredAds.length) {
-      window.map.renderPins(filteredAds);
+      window.map.renderPins(filteredAds.slice(0, window.map.pinsLimit));
     }
   };
 
   var onMapFiltersChange = window.utils.debounce(function () {
     window.map.removePins();
     window.map.closePopup();
-    updatePins(window.map.pinsData);
+    updatePins(window.map.pinsData());
   });
 
   filtersForm.addEventListener('change', onMapFiltersChange);

@@ -95,7 +95,7 @@
   // обрабатываем отправку данных формы
   submitBtn.addEventListener('click', function (evt) {
     var data = new FormData(adForm);
-    window.backend.save(showSuccessMessage, window.backend.onError, 'POST', data);
+    window.backend.save(showSuccessMessage, 'POST', data);
     evt.preventDefault();
   });
 
