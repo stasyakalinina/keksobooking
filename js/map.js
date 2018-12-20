@@ -17,7 +17,7 @@
   // данные для пинов
   var pinsData = [];
 
-  // функция успешной загрузки данных для отрисовки пинов и отрисовка пигов
+  // функция успешной загрузки данных для пинов и отрисовка пинов
   var onSuccess = function (resultRequest) {
     // проверяем пришедшие данные на содержание ключа offer, если он есть, то добавляем элемент в массив с данными
     if (resultRequest) {
@@ -79,6 +79,7 @@
     mapPins.appendChild(fragment);
   };
 
+  // удаляем пины
   var removePins = function () {
     var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (item) {
@@ -87,9 +88,12 @@
     window.utils.returnMainPin();
   };
 
-  var closePopup = function (popup) {
-    map.removeChild(popup);
-    setPinClass();
+  var closePopup = function () {
+    var popup = map.querySelector('.popup');
+    if (popup) {
+      map.removeChild(popup);
+      setPinClass();
+    }
   };
 
   // задаем координаты для поля адрес
@@ -197,6 +201,8 @@
     closePopup: closePopup,
     activatePin: activatePin,
     removePins: removePins,
-    setAdressValue: setAdressValue
+    setAdressValue: setAdressValue,
+    pinsData: pinsData,
+    renderPins: renderPins
   };
 })();
