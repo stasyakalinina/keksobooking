@@ -17,7 +17,7 @@
   // данные для пинов
   var pinsData = [];
 
-  // функция успешной загрузки данных для пинов и отрисовка пинов
+  // функция успешной загрузки данных для отрисовки пинов и отрисовка пигов
   var onSuccess = function (resultRequest) {
     // проверяем пришедшие данные на содержание ключа offer, если он есть, то добавляем элемент в массив с данными
     if (resultRequest) {
@@ -57,13 +57,27 @@
     map.insertBefore(window.card.render(pinData), mapFilters);
   };
 
+  // закрываем попап
+  var closePopup = function () {
+    var popup = map.querySelector('.popup');
+
+    if (popup) {
+      map.removeChild(popup);
+      setPinClass();
+    }
+  };
+
+  // закрываем попап по ESC
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === window.utils.esc) {
+      closePopup();
+    }
+  });
+
+  // устанавливаем метку активного пина и открываем попап
   var activatePin = function (pin, pinData) {
     setPinClass();
-
-    var popup = map.querySelector('.popup');
-    if (popup) {
-      closePopup(popup);
-    }
+    closePopup();
 
     pin.classList.add('map__pin--active');
     openPopup(pinData);
@@ -88,14 +102,6 @@
     window.utils.returnMainPin();
   };
 
-  var closePopup = function () {
-    var popup = map.querySelector('.popup');
-    if (popup) {
-      map.removeChild(popup);
-      setPinClass();
-    }
-  };
-
   // задаем координаты для поля адрес
   var setAdressValue = function () {
     var leftOffset = Math.round(parseInt(mainPin.style.left, 10) + mainPin.offsetWidth / 2);
@@ -104,12 +110,12 @@
     if (!map.classList.contains('map--faded')) {
       topOffset = Math.round(parseInt(mainPin.style.top, 10) + mainPin.offsetHeight + PIN_TAIL);
     } else {
-      topOffset = Math.round(parseInt(mainPin.style.top, 10) + mainPin.offsetHeight + 2);
+      topOffset = Math.round(parseInt(mainPin.style.top, 10) + mainPin.offsetHeight);
     }
     inputAddress.value = leftOffset + ', ' + topOffset;
   };
 
-  // перемещение главной метки
+  // задаем перемещение главной метки
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
@@ -189,20 +195,11 @@
   // устанавливает значение главного пина при неактивной странице
   setAdressValue();
 
-  // закрываем попап по ESC
-  document.addEventListener('keydown', function (evt) {
-    var popup = map.querySelector('.popup');
-    if (evt.keyCode === window.utils.esc && popup) {
-      closePopup(popup);
-    }
-  });
-
   window.map = {
     closePopup: closePopup,
     activatePin: activatePin,
     removePins: removePins,
     setAdressValue: setAdressValue,
-    pinsData: pinsData,
-    renderPins: renderPins
+    pinsAmount: PINS_AMOUNT
   };
 })();

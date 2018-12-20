@@ -3,6 +3,7 @@
 (function () {
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
+  var DEBOUNCE_INTERVAL = 500;
 
   var startCoordMainPin = {
     X: 570,
@@ -72,6 +73,20 @@
     mainPin.style.top = startCoordMainPin.Y + 'px';
   };
 
+  var debounce = function (cb) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
   window.utils = {
     enter: ENTER_KEYCODE,
     esc: ESC_KEYCODE,
@@ -80,6 +95,7 @@
     setActiveState: setActiveState,
     setInactiveState: setInactiveState,
     setDisableFieldset: setDisableFieldset,
-    returnMainPin: returnMainPin
+    returnMainPin: returnMainPin,
+    debounce: debounce
   };
 })();

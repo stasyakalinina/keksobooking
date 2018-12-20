@@ -9,7 +9,7 @@
 
   var updatePins = function (ads) {
     var filteredAds = ads.slice();
-    console.log(filteredAds);
+    // console.log(filteredAds);
 
     var selectFilters = filtersForm.querySelectorAll('select');
     var checkboxFilters = filtersForm.querySelectorAll('input[type=checkbox]:checked');
@@ -67,11 +67,11 @@
     }
   };
 
-  var onMapFiltersChange = function () {
+  var onMapFiltersChange = window.utils.debounce(function () {
     window.map.removePins();
     window.map.closePopup();
     updatePins(window.map.pinsData);
-  };
+  });
 
   filtersForm.addEventListener('change', onMapFiltersChange);
 
