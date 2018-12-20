@@ -59,11 +59,7 @@
     map.classList.add('map--faded');
     window.form.adForm.classList.add('ad-form--disabled');
     window.map.removePins();
-
-    var popup = map.querySelector('.popup');
-    if (popup) {
-      window.map.closePopup(popup);
-    }
+    window.map.closePopup();
     window.map.setAdressValue();
   };
 
