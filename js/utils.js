@@ -3,6 +3,7 @@
 (function () {
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
+  var DEBOUNCE_INTERVAL = 500;
 
   var startCoordMainPin = {
     X: 570,
@@ -58,18 +59,29 @@
     map.classList.add('map--faded');
     window.form.adForm.classList.add('ad-form--disabled');
     window.map.removePins();
-
-    var popup = map.querySelector('.popup');
-    if (popup) {
-      window.map.closePopup(popup);
-    }
+    window.map.closePopup();
     window.map.setAdressValue();
+    window.map.mainPin.addEventListener('mouseup', window.map.onMapPinMainMouseUp);
   };
 
   var returnMainPin = function () {
-    var mainPin = map.querySelector('.map__pin--main');
-    mainPin.style.left = startCoordMainPin.X + 'px';
-    mainPin.style.top = startCoordMainPin.Y + 'px';
+    // var mainPin = map.querySelector('.map__pin--main');
+    window.map.mainPin.style.left = startCoordMainPin.X + 'px';
+    window.map.mainPin.style.top = startCoordMainPin.Y + 'px';
+  };
+
+  var debounce = function (cb) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
   };
 
   window.utils = {
@@ -80,6 +92,7 @@
     setActiveState: setActiveState,
     setInactiveState: setInactiveState,
     setDisableFieldset: setDisableFieldset,
-    returnMainPin: returnMainPin
+    returnMainPin: returnMainPin,
+    debounce: debounce
   };
 })();
