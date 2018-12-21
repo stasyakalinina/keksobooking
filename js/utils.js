@@ -65,7 +65,6 @@
   };
 
   var returnMainPin = function () {
-    // var mainPin = map.querySelector('.map__pin--main');
     window.map.mainPin.style.left = startCoordMainPin.X + 'px';
     window.map.mainPin.style.top = startCoordMainPin.Y + 'px';
   };
@@ -91,7 +90,6 @@
     shuffleArray: shuffleArray,
     setActiveState: setActiveState,
     setInactiveState: setInactiveState,
-    setDisableFieldset: setDisableFieldset,
     returnMainPin: returnMainPin,
     debounce: debounce
   };

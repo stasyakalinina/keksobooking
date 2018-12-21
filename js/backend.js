@@ -15,15 +15,16 @@
     main.appendChild(errorAd);
     errorAd.querySelector('.error__message').textContent = getErrorMessage(status);
 
-    errorCloseBtn.addEventListener('click', function () {
+    var removeErrorAd = function () {
       main.removeChild(errorAd);
       window.utils.setActiveState();
-    });
+    };
+
+    errorCloseBtn.addEventListener('click', removeErrorAd);
 
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.utils.esc) {
-        main.removeChild(errorAd);
-        window.utils.setActiveState();
+        removeErrorAd();
       }
     });
   };
