@@ -12,7 +12,6 @@
   var mapFilters = map.querySelector('.map__filters-container');
   var mainPin = map.querySelector('.map__pin--main');
   var inputAddress = document.querySelector('#address');
-  var isLoadData = false;
 
   // данные для пинов
   var pinsData = [];
@@ -29,7 +28,7 @@
     }
     var selectedPinsArray = pinsData.slice(0, PINS_AMOUNT);
     renderPins(selectedPinsArray);
-    isLoadData = true;
+    mainPin.removeEventListener('mouseup', onMapPinMainMouseUp);
   };
 
   // Обработываем событие mouseup на главном указателе карты
@@ -37,10 +36,6 @@
     window.utils.setActiveState();
     // Загрузка информации об объявлениях и добавление указателей на карту
     window.backend.load(onSuccess, 'GET');
-
-    if (isLoadData) {
-      mainPin.removeEventListener('mouseup', onMapPinMainMouseUp);
-    }
   };
 
   mainPin.addEventListener('mouseup', onMapPinMainMouseUp);

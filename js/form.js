@@ -26,7 +26,9 @@
     '100': ['0']
   };
 
+  var filtersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
+  var checkList = adForm.querySelectorAll('.ad-form input, .ad-form select');
   var timein = adForm.querySelector('#timein');
   var timeout = adForm.querySelector('#timeout');
   var type = adForm.querySelector('#type');
@@ -35,6 +37,7 @@
   var capacity = adForm.querySelector('#capacity');
   var submitBtn = adForm.querySelector('.ad-form__submit');
   var resetBtn = adForm.querySelector('.ad-form__reset');
+  var invalidBorder = '0 0 2px 2px #ff6547';
 
   // функция подбора гостей по количеству выбранных комнат
   var roomNumberChangeHandler = function () {
@@ -92,17 +95,36 @@
     });
   };
 
-  // обрабатываем отправку данных формы
+  // валидация формы
+  var addInvalidListener = function (elem) {
+    var elemChangeHandler = function () {
+      elem.style.boxShadow = elem.validity.valid ? 'none' : invalidBorder;
+    };
+    elem.addEventListener('invalid', elemChangeHandler);
+    elem.addEventListener('input', elemChangeHandler);
+    if (elem.tagName === 'SELECT') {
+      elem.addEventListener('change', elemChangeHandler);
+    }
+  };
+
+  checkList.forEach(function (elem) {
+    addInvalidListener(elem);
+  });
+
+  // обрабатываем отправку данных формы аяксом
   submitBtn.addEventListener('click', function (evt) {
-    var data = new FormData(adForm);
-    window.backend.save(showSuccessMessage, 'POST', data);
-    evt.preventDefault();
+    if (adForm.checkValidity()) {
+      evt.preventDefault();
+      var data = new FormData(adForm);
+      window.backend.save(showSuccessMessage, 'POST', data);
+    }
   });
 
   // сброс полей формы, попапа и пинов кнопкой очистить
   resetBtn.addEventListener('click', function (evt) {
     evt.preventDefault();
     adForm.reset();
+    filtersForm.reset();
     window.utils.setInactiveState();
   });
 
