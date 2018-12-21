@@ -15,16 +15,15 @@
     main.appendChild(errorAd);
     errorAd.querySelector('.error__message').textContent = getErrorMessage(status);
 
-    var removeErrorAd = function () {
+    errorCloseBtn.addEventListener('click', function () {
       main.removeChild(errorAd);
       window.utils.setActiveState();
-    };
-
-    errorCloseBtn.addEventListener('click', removeErrorAd);
+    });
 
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.utils.esc) {
-        removeErrorAd();
+        main.removeChild(errorAd);
+        window.utils.setActiveState();
       }
     });
   };
@@ -48,7 +47,7 @@
     return errorMessage;
   };
 
-  // функция загрузки даннных с сервера и на сервер с параметрами успешной отпраки, ошибки, метода и параметров
+  // функция загрузки даннных с сервера и на сервер
   var sendRequest = function (onSuccess, method, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
