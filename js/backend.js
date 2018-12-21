@@ -47,7 +47,7 @@
     return errorMessage;
   };
 
-  // функция загрузки даннных с сервера и на сервер
+  // функция загрузки данных с сервера и на сервер
   var sendRequest = function (onSuccess, method, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
