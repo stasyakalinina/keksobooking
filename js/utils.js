@@ -5,13 +5,13 @@
   var ESC_KEYCODE = 27;
   var DEBOUNCE_INTERVAL = 500;
 
-  var startCoordMainPin = {
+  var StartCoordMainPin = {
     X: 570,
     Y: 375
   };
   var map = document.querySelector('.map');
   var filterSelects = map.querySelectorAll('.map__filter');
-  var filterCheckboxs = map.querySelector('.map__features');
+  var filterCheckboxFieldset = map.querySelector('.map__features');
   var fieldsets = document.querySelectorAll('.ad-form__element');
 
   var getRandomInteger = function (min, max) {
@@ -39,8 +39,9 @@
     filterSelects.forEach(function (item) {
       item.setAttribute('disabled', 'disabled');
     });
-    filterCheckboxs.setAttribute('disabled', 'disabled');
+    filterCheckboxFieldset.setAttribute('disabled', 'disabled');
   };
+
   // Все поля блокируем по умолчанию
   setDisableFieldset();
 
@@ -52,7 +53,7 @@
     filterSelects.forEach(function (item) {
       item.removeAttribute('disabled');
     });
-    filterCheckboxs.removeAttribute('disabled');
+    filterCheckboxFieldset.removeAttribute('disabled');
   };
 
   // функция установки активного состояния
@@ -75,8 +76,8 @@
   };
 
   var returnMainPin = function () {
-    window.map.mainPin.style.left = startCoordMainPin.X + 'px';
-    window.map.mainPin.style.top = startCoordMainPin.Y + 'px';
+    window.map.mainPin.style.left = StartCoordMainPin.X + 'px';
+    window.map.mainPin.style.top = StartCoordMainPin.Y + 'px';
   };
 
   var debounce = function (cb) {

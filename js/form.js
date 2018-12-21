@@ -26,15 +26,13 @@
     '100': ['0']
   };
 
-  var MIN_TITLE = 30;
-
   var filtersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
+  var checkList = adForm.querySelectorAll('.ad-form input, .ad-form select');
   var timein = adForm.querySelector('#timein');
   var timeout = adForm.querySelector('#timeout');
   var type = adForm.querySelector('#type');
   var price = adForm.querySelector('#price');
-  var title = adForm.querySelector('#title');
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
   var submitBtn = adForm.querySelector('.ad-form__submit');
@@ -98,40 +96,28 @@
   };
 
   // валидация формы
-  title.addEventListener('invalid', function () {
-    if (title.validity.tooShort) {
-      title.setCustomValidity('Описание должно состоять минимум из 30 символов');
-      title.style.boxShadow = invalidBorder;
-    } else if (title.validity.tooLong) {
-      title.setCustomValidity('Описание не должно превышать 100 символов');
-      title.style.boxShadow = invalidBorder;
-    } else if (title.validity.valueMissing) {
-      title.setCustomValidity('Обязательное поле');
-      title.style.boxShadow = invalidBorder;
-    } else {
-      title.setCustomValidity('');
+  var addInvalidListener = function (elem) {
+    var elemChangeHandler = function () {
+      elem.style.boxShadow = elem.validity.valid ? 'none' : invalidBorder;
+    };
+    elem.addEventListener('invalid', elemChangeHandler);
+    elem.addEventListener('input', elemChangeHandler);
+    if (elem.tagName === 'SELECT') {
+      elem.addEventListener('change', elemChangeHandler);
     }
-  });
+  };
 
-  title.addEventListener('input', function (evt) {
-    var target = evt.target;
-    if (target.value.length < MIN_TITLE) {
-      target.setCustomValidity('Описание должно состоять минимум из 30 символов');
-    } else {
-      target.setCustomValidity('');
-    }
-  });
-
-  price.addEventListener('invalid', function () {
-    price.setCustomValidity('Обязательное поле');
-    price.style.boxShadow = invalidBorder;
+  checkList.forEach(function (elem) {
+    addInvalidListener(elem);
   });
 
   // обрабатываем отправку данных формы аяксом
   submitBtn.addEventListener('click', function (evt) {
-    var data = new FormData(adForm);
-    window.backend.save(showSuccessMessage, 'POST', data);
-    evt.preventDefault();
+    if (adForm.checkValidity()) {
+      evt.preventDefault();
+      var data = new FormData(adForm);
+      window.backend.save(showSuccessMessage, 'POST', data);
+    }
   });
 
   // сброс полей формы, попапа и пинов кнопкой очистить
