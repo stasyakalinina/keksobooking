@@ -10,6 +10,8 @@
     Y: 375
   };
   var map = document.querySelector('.map');
+  var filterSelects = map.querySelectorAll('.map__filter');
+  var filterCheckboxs = map.querySelector('.map__features');
   var fieldsets = document.querySelectorAll('.ad-form__element');
 
   var getRandomInteger = function (min, max) {
@@ -29,11 +31,15 @@
     return a;
   };
 
-  // функция установки неактивных полей
+  // функция установки неактивных полей форм фильтрации и объявления
   var setDisableFieldset = function () {
     fieldsets.forEach(function (item) {
       item.setAttribute('disabled', 'disabled');
     });
+    filterSelects.forEach(function (item) {
+      item.setAttribute('disabled', 'disabled');
+    });
+    filterCheckboxs.setAttribute('disabled', 'disabled');
   };
   // Все поля блокируем по умолчанию
   setDisableFieldset();
@@ -43,6 +49,10 @@
     fieldsets.forEach(function (item) {
       item.removeAttribute('disabled');
     });
+    filterSelects.forEach(function (item) {
+      item.removeAttribute('disabled');
+    });
+    filterCheckboxs.removeAttribute('disabled');
   };
 
   // функция установки активного состояния
