@@ -26,15 +26,20 @@
     '100': ['0']
   };
 
+  var MIN_TITLE = 30;
+
+  var filtersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
   var timein = adForm.querySelector('#timein');
   var timeout = adForm.querySelector('#timeout');
   var type = adForm.querySelector('#type');
   var price = adForm.querySelector('#price');
+  var title = adForm.querySelector('#title');
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
   var submitBtn = adForm.querySelector('.ad-form__submit');
   var resetBtn = adForm.querySelector('.ad-form__reset');
+  var invalidBorder = '0 0 2px 2px #ff6547';
 
   // функция подбора гостей по количеству выбранных комнат
   var roomNumberChangeHandler = function () {
@@ -92,7 +97,37 @@
     });
   };
 
-  // обрабатываем отправку данных формы
+  // валидация формы
+  title.addEventListener('invalid', function () {
+    if (title.validity.tooShort) {
+      title.setCustomValidity('Описание должно состоять минимум из 30 символов');
+      title.style.boxShadow = invalidBorder;
+    } else if (title.validity.tooLong) {
+      title.setCustomValidity('Описание не должно превышать 100 символов');
+      title.style.boxShadow = invalidBorder;
+    } else if (title.validity.valueMissing) {
+      title.setCustomValidity('Обязательное поле');
+      title.style.boxShadow = invalidBorder;
+    } else {
+      title.setCustomValidity('');
+    }
+  });
+
+  title.addEventListener('input', function (evt) {
+    var target = evt.target;
+    if (target.value.length < MIN_TITLE) {
+      target.setCustomValidity('Описание должно состоять минимум из 30 символов');
+    } else {
+      target.setCustomValidity('');
+    }
+  });
+
+  price.addEventListener('invalid', function () {
+    price.setCustomValidity('Обязательное поле');
+    price.style.boxShadow = invalidBorder;
+  });
+
+  // обрабатываем отправку данных формы аяксом
   submitBtn.addEventListener('click', function (evt) {
     var data = new FormData(adForm);
     window.backend.save(showSuccessMessage, 'POST', data);
@@ -103,6 +138,7 @@
   resetBtn.addEventListener('click', function (evt) {
     evt.preventDefault();
     adForm.reset();
+    filtersForm.reset();
     window.utils.setInactiveState();
   });
 
