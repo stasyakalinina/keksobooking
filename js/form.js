@@ -84,6 +84,7 @@
       adForm.reset();
       window.utils.returnMainPin();
       window.utils.setInactiveState();
+      window.upload.setDefaultAvatar();
     });
 
     document.addEventListener('keydown', function (evt) {
@@ -120,16 +121,18 @@
     }
   });
 
-  // сброс полей формы, попапа и пинов кнопкой очистить
+  // сброс полей формы, попапа, пинов и кастомного аватара на дефолтный кнопкой очистить
   resetBtn.addEventListener('click', function (evt) {
     evt.preventDefault();
     adForm.reset();
     filtersForm.reset();
+    window.upload.setDefaultAvatar();
     window.utils.setInactiveState();
   });
 
   window.form = {
     adForm: adForm,
-    types: TYPES
+    types: TYPES,
+    resetBtn: resetBtn
   };
 })();
