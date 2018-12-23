@@ -8,16 +8,14 @@
   var filtersForm = document.querySelector('.map__filters');
 
   var updatePins = function (ads) {
-    var filteredAds = ads.slice();
-
-    var selectFilters = filtersForm.querySelectorAll('select');
-    var checkboxFilters = filtersForm.querySelectorAll('input[type=checkbox]:checked');
-
     var FilterRules = {
       'housing-type': 'type',
       'housing-rooms': 'room',
       'housing-guests': 'guests'
     };
+    var filteredAds = ads.slice();
+    var selectFilters = filtersForm.querySelectorAll('select');
+    var checkboxFilters = filtersForm.querySelectorAll('input[type=checkbox]:checked');
 
     var filterByValue = function (element, property) {
       return filteredAds.filter(function (ad) {
@@ -45,6 +43,7 @@
     if (selectFilters.length !== null) {
       selectFilters.forEach(function (item) {
         if (item.value !== 'any') {
+          // item.value !== 'housing-price' ? filteredAds = filterByValue(item, FilterRules[item.id]) : filteredAds = filterByPrice(item)
           if (item.value !== 'housing-price') {
             filteredAds = filterByValue(item, FilterRules[item.id]);
           } else {
@@ -68,7 +67,7 @@
   var onMapFiltersChange = window.utils.debounce(function () {
     window.map.removePins();
     window.map.closePopup();
-    updatePins(window.map.pinsData());
+    updatePins(window.map.getPinsData());
   });
 
   filtersForm.addEventListener('change', onMapFiltersChange);

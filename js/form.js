@@ -25,7 +25,7 @@
     '3': ['3', '2', '1'],
     '100': ['0']
   };
-
+  var INVALID_BORDER = '0 0 2px 2px #ff6547';
   var filtersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
   var checkList = adForm.querySelectorAll('.ad-form input, .ad-form select');
@@ -37,7 +37,6 @@
   var capacity = adForm.querySelector('#capacity');
   var submitBtn = adForm.querySelector('.ad-form__submit');
   var resetBtn = adForm.querySelector('.ad-form__reset');
-  var invalidBorder = '0 0 2px 2px #ff6547';
 
   // функция подбора гостей по количеству выбранных комнат
   var roomNumberChangeHandler = function () {
@@ -99,7 +98,7 @@
   // валидация формы
   var addInvalidListener = function (elem) {
     var elemChangeHandler = function () {
-      elem.style.boxShadow = elem.validity.valid ? 'none' : invalidBorder;
+      elem.style.boxShadow = elem.validity.valid ? 'none' : INVALID_BORDER;
     };
     elem.addEventListener('invalid', elemChangeHandler);
     elem.addEventListener('input', elemChangeHandler);
