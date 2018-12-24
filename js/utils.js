@@ -5,7 +5,7 @@
   var ESC_KEYCODE = 27;
   var DEBOUNCE_INTERVAL = 500;
 
-  var startCoordMainPin = {
+  var StartCoordMainPin = {
     X: 570,
     Y: 375
   };
@@ -76,8 +76,8 @@
   };
 
   var returnMainPin = function () {
-    window.map.mainPin.style.left = startCoordMainPin.X + 'px';
-    window.map.mainPin.style.top = startCoordMainPin.Y + 'px';
+    window.map.mainPin.style.left = StartCoordMainPin.X + 'px';
+    window.map.mainPin.style.top = StartCoordMainPin.Y + 'px';
   };
 
   var debounce = function (cb) {
