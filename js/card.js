@@ -36,18 +36,18 @@
 
     if (cardData.offer.features) {
       popupFeatures.innerHTML = '';
-      for (var i = 0; i < cardData.offer.features.length; i++) {
-        popupFeatures.insertAdjacentHTML('beforeEnd', '<li class="popup__feature popup__feature--' + cardData.offer.features[i] + '"></li>');
-      }
+      cardData.offer.features.forEach(function (item) {
+        popupFeatures.insertAdjacentHTML('beforeEnd', '<li class="popup__feature popup__feature--' + item + '"></li>');
+      });
     } else {
       popupFeatures.classList.add('hidden');
     }
 
     if (cardData.offer.photos) {
       popupImages.innerHTML = '';
-      for (var j = 0; j < cardData.offer.photos.length; j++) {
-        popupImages.insertAdjacentHTML('afterBegin', '<img src="' + cardData.offer.photos[j] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
-      }
+      cardData.offer.photos.forEach(function (pic) {
+        popupImages.insertAdjacentHTML('beforeEnd', '<img src="' + pic + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
+      });
     } else {
       popupImages.classList.add('hidden');
     }

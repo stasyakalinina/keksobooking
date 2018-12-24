@@ -28,11 +28,12 @@
   var INVALID_BORDER = '0 0 2px 2px #ff6547';
   var filtersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
-  var checkList = adForm.querySelectorAll('.ad-form input, .ad-form select');
+  var checkList = adForm.querySelectorAll('#title, #price');
   var timein = adForm.querySelector('#timein');
   var timeout = adForm.querySelector('#timeout');
   var type = adForm.querySelector('#type');
   var price = adForm.querySelector('#price');
+  // var title = adForm.querySelector('#title');
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
   var submitBtn = adForm.querySelector('.ad-form__submit');
@@ -75,20 +76,20 @@
   // показываем сообщение об успешной отправке и удаляем это сообщение по клику на нем
   var showSuccessMessage = function () {
     var successAd = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
-    var main = document.querySelector('main');
-    main.appendChild(successAd);
+    window.backend.main.appendChild(successAd);
 
     successAd.addEventListener('click', function () {
-      main.removeChild(successAd);
+      window.backend.main.removeChild(successAd);
       adForm.reset();
       window.utils.returnMainPin();
       window.utils.setInactiveState();
       window.upload.setDefaultAvatar();
+      window.upload.resetUploadPhotos();
     });
 
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.utils.esc) {
-        main.removeChild(successAd);
+        window.backend.main.removeChild(successAd);
         adForm.reset();
         window.utils.setInactiveState();
       }
@@ -97,14 +98,11 @@
 
   // валидация формы
   var addInvalidListener = function (elem) {
-    var elemChangeHandler = function () {
+    var setInvalidBorder = function () {
       elem.style.boxShadow = elem.validity.valid ? 'none' : INVALID_BORDER;
     };
-    elem.addEventListener('invalid', elemChangeHandler);
-    elem.addEventListener('input', elemChangeHandler);
-    if (elem.tagName === 'SELECT') {
-      elem.addEventListener('change', elemChangeHandler);
-    }
+    elem.addEventListener('invalid', setInvalidBorder);
+    elem.addEventListener('input', setInvalidBorder);
   };
 
   checkList.forEach(function (elem) {

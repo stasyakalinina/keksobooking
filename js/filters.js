@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
-  var PRICE_LIMIT = {
-    low: 10000,
-    high: 50000
+  var PriceLimit = {
+    LOW: 10000,
+    HIGH: 50000
   };
   var filtersForm = document.querySelector('.map__filters');
 
@@ -26,9 +26,9 @@
     var filterByPrice = function (priceFilter) {
       return filteredAds.filter(function (ad) {
         var priceFilterValues = {
-          'low': ad.offer.price < PRICE_LIMIT.low,
-          'middle': ad.offer.price >= PRICE_LIMIT.low && ad.offer.price <= PRICE_LIMIT.high,
-          'high': ad.offer.price >= PRICE_LIMIT.high
+          'low': ad.offer.price < PriceLimit.LOW,
+          'middle': ad.offer.price >= PriceLimit.LOW && ad.offer.price <= PriceLimit.HIGH,
+          'high': ad.offer.price >= PriceLimit.HIGH
         };
         return priceFilterValues[priceFilter.value];
       });
@@ -43,7 +43,7 @@
     if (selectFilters.length !== null) {
       selectFilters.forEach(function (item) {
         if (item.value !== 'any') {
-          // item.value !== 'housing-price' ? filteredAds = filterByValue(item, FilterRules[item.id]) : filteredAds = filterByPrice(item)
+          // item.value !== 'housing-price' ? filteredAds = filterByValue(item, FilterRules[item.id]) : filteredAds = filterByPrice(item);
           if (item.value !== 'housing-price') {
             filteredAds = filterByValue(item, FilterRules[item.id]);
           } else {

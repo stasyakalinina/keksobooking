@@ -5,12 +5,12 @@
   var POST_URL = 'https://js.dump.academy/keksobooking/';
   var REQUEST_TIMEOUT = 10000;
   var OK_CODE = 200;
+  var main = document.querySelector('main');
 
   // отрисовка сообщения об ошибке и закрытие окна с ошибкой
   var onError = function () {
     var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
     var errorCloseBtn = errorAd.querySelector('.error__button');
-    var main = document.querySelector('main');
 
     main.appendChild(errorAd);
     errorAd.querySelector('.error__message').textContent = getErrorMessage(status);
@@ -76,6 +76,7 @@
     },
     load: function (onSuccess, method) {
       sendRequest(onSuccess, method);
-    }
+    },
+    main: main
   };
 })();
