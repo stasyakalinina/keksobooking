@@ -13,6 +13,17 @@
   var mainPin = map.querySelector('.map__pin--main');
   var inputAddress = document.querySelector('#address');
 
+  var limitCoords = {
+    x: {
+      min: 0,
+      max: map.offsetWidth - mainPin.offsetWidth
+    },
+    y: {
+      min: LocationRange.MIN - mainPin.offsetHeight - PIN_TAIL,
+      max: LocationRange.MAX - mainPin.offsetHeight - PIN_TAIL
+    }
+  };
+
   // данные для пинов
   var getPinsData = [];
 
@@ -53,6 +64,13 @@
     map.insertBefore(window.card.render(pinData), mapFilters);
   };
 
+  // закрываем попап по ESC
+  var onPopupEscKeyDown = function (evt) {
+    if (evt.keyCode === window.utils.esc) {
+      closePopup();
+    }
+  };
+
   // закрываем попап
   var closePopup = function () {
     var popup = map.querySelector('.popup');
@@ -61,14 +79,9 @@
       map.removeChild(popup);
       setPinClass();
     }
-  };
 
-  // закрываем попап по ESC
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.utils.esc) {
-      closePopup();
-    }
-  });
+    document.removeEventListener('keydown', onPopupEscKeyDown);
+  };
 
   // устанавливаем метку активного пина и открываем попап
   var activatePin = function (pin, pinData) {
@@ -77,6 +90,8 @@
 
     pin.classList.add('map__pin--active');
     openPopup(pinData);
+    // добавляем обработчик, слушать закрытие по esc
+    document.addEventListener('keydown', onPopupEscKeyDown);
   };
 
   // отрисовываем пины
@@ -118,17 +133,6 @@
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
-    };
-
-    var limitCoords = {
-      x: {
-        min: 0,
-        max: map.offsetWidth - mainPin.offsetWidth
-      },
-      y: {
-        min: LocationRange.MIN - mainPin.offsetHeight - PIN_TAIL,
-        max: LocationRange.MAX - mainPin.offsetHeight - PIN_TAIL
-      }
     };
 
     var onMouseMove = function (moveEvt) {

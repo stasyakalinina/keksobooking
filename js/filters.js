@@ -10,7 +10,7 @@
   var updatePins = function (ads) {
     var FilterRules = {
       'housing-type': 'type',
-      'housing-rooms': 'room',
+      'housing-rooms': 'rooms',
       'housing-guests': 'guests'
     };
     var filteredAds = ads.slice();
@@ -43,12 +43,7 @@
     if (selectFilters.length !== null) {
       selectFilters.forEach(function (item) {
         if (item.value !== 'any') {
-          // item.value !== 'housing-price' ? filteredAds = filterByValue(item, FilterRules[item.id]) : filteredAds = filterByPrice(item);
-          if (item.value !== 'housing-price') {
-            filteredAds = filterByValue(item, FilterRules[item.id]);
-          } else {
-            filteredAds = filterByPrice(item);
-          }
+          filteredAds = (item.id !== 'housing-price') ? filterByValue(item, FilterRules[item.id]) : filterByPrice(item);
         }
       });
     }
