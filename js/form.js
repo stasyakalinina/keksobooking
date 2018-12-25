@@ -33,7 +33,6 @@
   var timeout = adForm.querySelector('#timeout');
   var type = adForm.querySelector('#type');
   var price = adForm.querySelector('#price');
-  // var title = adForm.querySelector('#title');
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
   var submitBtn = adForm.querySelector('.ad-form__submit');
@@ -43,8 +42,8 @@
   var roomNumberChangeHandler = function () {
     if (capacity.options.length > 0) {
       [].forEach.call(capacity.options, function (item) {
-        item.selected = (ROOM_CAPACITY[roomNumber.value] [0] === item.value) ? true : false;
-        item.hidden = (ROOM_CAPACITY[roomNumber.value].indexOf(item.value) >= 0) ? false : true;
+        item.selected = (ROOM_CAPACITY[roomNumber.value] [0] === item.value);
+        item.hidden = !(ROOM_CAPACITY[roomNumber.value].indexOf(item.value) >= 0);
       });
     }
   };
@@ -76,7 +75,18 @@
   // показываем сообщение об успешной отправке и удаляем это сообщение по клику на нем
   var showSuccessMessage = function () {
     var successAd = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
+
+    var onSuccessAdEscKeyDown = function (evt) {
+      if (evt.keyCode === window.utils.esc) {
+        window.backend.main.removeChild(successAd);
+        adForm.reset();
+        window.utils.setInactiveState();
+        document.removeEventListener('keydown', onSuccessAdEscKeyDown);
+      }
+    };
+
     window.backend.main.appendChild(successAd);
+    document.addEventListener('keydown', onSuccessAdEscKeyDown);
 
     successAd.addEventListener('click', function () {
       window.backend.main.removeChild(successAd);
@@ -86,14 +96,6 @@
       window.upload.setDefaultAvatar();
       window.upload.resetUploadPhotos();
     });
-
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.utils.esc) {
-        window.backend.main.removeChild(successAd);
-        adForm.reset();
-        window.utils.setInactiveState();
-      }
-    });
   };
 
   // валидация формы
@@ -101,8 +103,17 @@
     var setInvalidBorder = function () {
       elem.style.boxShadow = elem.validity.valid ? 'none' : INVALID_BORDER;
     };
-    elem.addEventListener('invalid', setInvalidBorder);
-    elem.addEventListener('input', setInvalidBorder);
+
+    var onSetInvalidField = function () {
+      setInvalidBorder();
+    };
+
+    var onFieldInput = function () {
+      setInvalidBorder();
+    };
+
+    elem.addEventListener('invalid', onSetInvalidField);
+    elem.addEventListener('input', onFieldInput);
   };
 
   checkList.forEach(function (elem) {

@@ -12,19 +12,21 @@
     var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
     var errorCloseBtn = errorAd.querySelector('.error__button');
 
+    var onErrorEscKeyDown = function (evt) {
+      if (evt.keyCode === window.utils.esc) {
+        main.removeChild(errorAd);
+        window.utils.setActiveState();
+        document.removeEventListener('keydown', onErrorEscKeyDown);
+      }
+    };
+
     main.appendChild(errorAd);
     errorAd.querySelector('.error__message').textContent = getErrorMessage(status);
+    document.addEventListener('keydown', onErrorEscKeyDown);
 
     errorCloseBtn.addEventListener('click', function () {
       main.removeChild(errorAd);
       window.utils.setActiveState();
-    });
-
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.utils.esc) {
-        main.removeChild(errorAd);
-        window.utils.setActiveState();
-      }
     });
   };
 

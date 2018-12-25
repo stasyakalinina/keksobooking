@@ -14,23 +14,6 @@
   var filterCheckboxFieldset = map.querySelector('.map__features');
   var fieldsets = document.querySelectorAll('.ad-form__element');
 
-  var getRandomInteger = function (min, max) {
-    return Math.round(min - 0.5 + Math.random() * (max - min + 1));
-  };
-
-  var shuffleArray = function (a) {
-    var j;
-    var x;
-    var i;
-    for (i = a.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1));
-      x = a[i];
-      a[i] = a[j];
-      a[j] = x;
-    }
-    return a;
-  };
-
   // функция установки неактивных полей форм фильтрации и объявления
   var setDisableFieldset = function () {
     fieldsets.forEach(function (item) {
@@ -97,8 +80,6 @@
   window.utils = {
     enter: ENTER_KEYCODE,
     esc: ESC_KEYCODE,
-    getRandomInteger: getRandomInteger,
-    shuffleArray: shuffleArray,
     setActiveState: setActiveState,
     setInactiveState: setInactiveState,
     returnMainPin: returnMainPin,
