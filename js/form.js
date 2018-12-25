@@ -77,6 +77,7 @@
     var successAd = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
 
     var onSuccessAdEscKeyDown = function (evt) {
+      evt.preventDefault();
       if (evt.keyCode === window.utils.esc) {
         window.backend.main.removeChild(successAd);
         adForm.reset();

@@ -40,15 +40,12 @@
       });
     };
 
-    if (selectFilters.length !== null) {
+    if (selectFilters.length !== null && checkboxFilters.length !== null) {
       selectFilters.forEach(function (item) {
         if (item.value !== 'any') {
           filteredAds = (item.id !== 'housing-price') ? filterByValue(item, FilterRules[item.id]) : filterByPrice(item);
         }
       });
-    }
-
-    if (checkboxFilters.length !== null) {
       checkboxFilters.forEach(function (item) {
         filteredAds = filterByFeatures(item);
       });

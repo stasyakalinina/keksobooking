@@ -13,6 +13,7 @@
     var errorCloseBtn = errorAd.querySelector('.error__button');
 
     var onErrorEscKeyDown = function (evt) {
+      evt.preventDefault();
       if (evt.keyCode === window.utils.esc) {
         main.removeChild(errorAd);
         window.utils.setActiveState();
