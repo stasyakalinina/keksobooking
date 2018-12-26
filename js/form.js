@@ -37,6 +37,7 @@
   var capacity = adForm.querySelector('#capacity');
   var submitBtn = adForm.querySelector('.ad-form__submit');
   var resetBtn = adForm.querySelector('.ad-form__reset');
+  var successAd = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
 
   // функция подбора гостей по количеству выбранных комнат
   var changeRoomNumber = function () {
@@ -74,8 +75,6 @@
 
   // показываем сообщение об успешной отправке и удаляем это сообщение по клику на нем
   var showSuccessMessage = function () {
-    var successAd = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
-
     var onSuccessAdEscKeyDown = function (evt) {
       evt.preventDefault();
       if (evt.keyCode === window.utils.esc) {
@@ -94,7 +93,6 @@
       adForm.reset();
       window.utils.returnMainPin();
       window.utils.setInactiveState();
-      window.upload.resetUploadPhotos();
       document.removeEventListener('keydown', onSuccessAdEscKeyDown);
     });
   };

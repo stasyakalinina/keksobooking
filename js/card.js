@@ -1,8 +1,9 @@
 'use strict';
 
 (function () {
+  var card = document.querySelector('#card').content.querySelector('.popup').cloneNode(true);
+
   var renderCard = function (cardData) {
-    var card = document.querySelector('#card').content.querySelector('.popup').cloneNode(true);
     var popupType = card.querySelector('.popup__type');
     var popupRoomAndGuest = card.querySelector('.popup__text--capacity');
     var popupTimeCheck = card.querySelector('.popup__text--time');

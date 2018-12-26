@@ -6,31 +6,8 @@
   var REQUEST_TIMEOUT = 10000;
   var OK_CODE = 200;
   var main = document.querySelector('main');
-
-  // отрисовка сообщения об ошибке и закрытие окна с ошибкой
-  var onError = function () {
-    var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
-    var errorCloseBtn = errorAd.querySelector('.error__button');
-
-    var onErrorEscKeyDown = function (evt) {
-      evt.preventDefault();
-      if (evt.keyCode === window.utils.esc) {
-        main.removeChild(errorAd);
-        window.utils.setActiveState();
-        document.removeEventListener('keydown', onErrorEscKeyDown);
-      }
-    };
-
-    main.appendChild(errorAd);
-    errorAd.querySelector('.error__message').textContent = getErrorMessage(status);
-    document.addEventListener('keydown', onErrorEscKeyDown);
-
-    errorCloseBtn.addEventListener('click', function () {
-      main.removeChild(errorAd);
-      window.utils.setActiveState();
-      document.removeEventListener('keydown', onErrorEscKeyDown);
-    });
-  };
+  var errorAd = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
+  var errorCloseBtn = errorAd.querySelector('.error__button');
 
   // обрабатываем ошибки
   var getErrorMessage = function (status) {
@@ -49,6 +26,28 @@
         errorMessage = 'Ошибка доступа: ' + status;
     }
     return errorMessage;
+  };
+
+  // отрисовка сообщения об ошибке и закрытие окна с ошибкой
+  var onError = function () {
+    var onErrorEscKeyDown = function (evt) {
+      evt.preventDefault();
+      if (evt.keyCode === window.utils.esc) {
+        main.removeChild(errorAd);
+        window.utils.setActiveState();
+        document.removeEventListener('keydown', onErrorEscKeyDown);
+      }
+    };
+
+    main.appendChild(errorAd);
+    errorAd.querySelector('.error__message').textContent = getErrorMessage();
+    document.addEventListener('keydown', onErrorEscKeyDown);
+
+    errorCloseBtn.addEventListener('click', function () {
+      main.removeChild(errorAd);
+      window.utils.setActiveState();
+      document.removeEventListener('keydown', onErrorEscKeyDown);
+    });
   };
 
   // функция загрузки данных с сервера и на сервер
