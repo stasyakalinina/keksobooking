@@ -25,7 +25,7 @@
   };
 
   // данные для пинов
-  var getPinsData = [];
+  var pinsData = [];
 
   // функция успешной загрузки данных для отрисовки пинов и отрисовка пигов
   var onSuccess = function (resultRequest) {
@@ -33,11 +33,11 @@
     if (resultRequest) {
       resultRequest.forEach(function (item) {
         if (item.offer) {
-          getPinsData.push(item);
+          pinsData.push(item);
         }
       });
     }
-    var selectedPinsArray = getPinsData.slice(0, PINS_AMOUNT);
+    var selectedPinsArray = pinsData.slice(0, PINS_AMOUNT);
     renderPins(selectedPinsArray);
     mainPin.removeEventListener('mouseup', onMapPinMainMouseUp);
   };
@@ -201,7 +201,7 @@
     renderPins: renderPins,
     removePins: removePins,
     getPinsData: function () {
-      return getPinsData;
+      return pinsData;
     },
     setAdressValue: setAdressValue,
     pinsLimit: PINS_AMOUNT,

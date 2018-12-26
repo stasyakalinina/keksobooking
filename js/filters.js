@@ -1,67 +1,67 @@
 'use strict';
 
 (function () {
-  var PriceLimit = {
-    LOW: 10000,
-    HIGH: 50000
+  var priceMap = {
+    'low': {
+      start: 0,
+      end: 10000
+    },
+    'middle': {
+      start: 10000,
+      end: 50000
+    },
+    'high': {
+      start: 50000,
+      end: Infinity
+    }
   };
   var filtersForm = document.querySelector('.map__filters');
+  var filtersElements = Array.from(filtersForm.children);
 
-  var updatePins = function (ads) {
-    var FilterRules = {
-      'housing-type': 'type',
-      'housing-rooms': 'rooms',
-      'housing-guests': 'guests'
-    };
-    var filteredAds = ads.slice();
-    var selectFilters = filtersForm.querySelectorAll('select');
-    var checkboxFilters = filtersForm.querySelectorAll('input[type=checkbox]:checked');
+  var filterRules = {
+    'housing-type': function (data, filter) {
+      return filter.value === data.offer.type;
+    },
 
-    var filterByValue = function (element, property) {
-      return filteredAds.filter(function (ad) {
-        return ad.offer[property].toString() === element.value;
-      });
-    };
+    'housing-price': function (data, filter) {
+      return data.offer.price >= priceMap[filter.value].start && data.offer.price < priceMap[filter.value].end;
+    },
 
-    var filterByPrice = function (priceFilter) {
-      return filteredAds.filter(function (ad) {
-        var priceFilterValues = {
-          'low': ad.offer.price < PriceLimit.LOW,
-          'middle': ad.offer.price >= PriceLimit.LOW && ad.offer.price <= PriceLimit.HIGH,
-          'high': ad.offer.price >= PriceLimit.HIGH
-        };
-        return priceFilterValues[priceFilter.value];
-      });
-    };
+    'housing-rooms': function (data, filter) {
+      return filter.value === data.offer.rooms.toString();
+    },
 
-    var filterByFeatures = function (featuresCheckbox) {
-      return filteredAds.filter(function (ad) {
-        return ad.offer.features.indexOf(featuresCheckbox.value) >= 0;
-      });
-    };
+    'housing-guests': function (data, filter) {
+      return filter.value === data.offer.guests.toString();
+    },
 
-    if (selectFilters.length !== null && checkboxFilters.length !== null) {
-      selectFilters.forEach(function (item) {
-        if (item.value !== 'any') {
-          filteredAds = (item.id !== 'housing-price') ? filterByValue(item, FilterRules[item.id]) : filterByPrice(item);
-        }
-      });
-      checkboxFilters.forEach(function (item) {
-        filteredAds = filterByFeatures(item);
+    'housing-features': function (data, filter) {
+      var checkListElements = Array.from(filter.querySelectorAll('input[type=checkbox]:checked'));
+
+      return checkListElements.every(function (it) {
+        return data.offer.features.some(function (feature) {
+          return feature === it.value;
+        });
       });
     }
+  };
 
-    if (filteredAds.length) {
-      window.map.renderPins(filteredAds.slice(0, window.map.pinsLimit));
-    }
+  var filterData = function (data) {
+    return data.filter(function (item) {
+      return filtersElements.every(function (filter) {
+        return (filter.value === 'any') ? true : filterRules[filter.id](item, filter);
+      });
+    });
   };
 
   var onMapFiltersChange = window.utils.debounce(function () {
     window.map.removePins();
     window.map.closePopup();
-    updatePins(window.map.getPinsData());
+
+    var data = filterData(window.map.getPinsData());
+    var pins = window.utils.slicePins(data);
+    window.map.renderPins(pins);
   });
 
   filtersForm.addEventListener('change', onMapFiltersChange);
-
 })();
