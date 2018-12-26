@@ -39,7 +39,7 @@
   var resetBtn = adForm.querySelector('.ad-form__reset');
 
   // функция подбора гостей по количеству выбранных комнат
-  var roomNumberChangeHandler = function () {
+  var changeRoomNumber = function () {
     if (capacity.options.length > 0) {
       [].forEach.call(capacity.options, function (item) {
         item.selected = (ROOM_CAPACITY[roomNumber.value] [0] === item.value);
@@ -47,30 +47,30 @@
       });
     }
   };
-  roomNumberChangeHandler();
-  roomNumber.addEventListener('change', roomNumberChangeHandler);
+  changeRoomNumber();
+  roomNumber.addEventListener('change', changeRoomNumber);
 
   // функция подбора цены по типу жилья
-  var typeChangeHandler = function () {
+  var changeType = function () {
     var minPrice = TYPES[type.value].min;
     price.min = minPrice;
     price.placeholder = minPrice;
   };
 
-  typeChangeHandler();
-  type.addEventListener('change', typeChangeHandler);
+  changeType();
+  type.addEventListener('change', changeType);
 
   // функции подбора время въезда и выезда
-  var timeInChangeHandler = function () {
+  var changeTimeIn = function () {
     timeout.value = timein.value;
   };
 
-  var timeOutChangeHandler = function () {
+  var changeTimeOut = function () {
     timein.value = timeout.value;
   };
 
-  timein.addEventListener('change', timeInChangeHandler);
-  timeout.addEventListener('change', timeOutChangeHandler);
+  timein.addEventListener('change', changeTimeIn);
+  timeout.addEventListener('change', changeTimeOut);
 
   // показываем сообщение об успешной отправке и удаляем это сообщение по клику на нем
   var showSuccessMessage = function () {
@@ -94,8 +94,8 @@
       adForm.reset();
       window.utils.returnMainPin();
       window.utils.setInactiveState();
-      window.upload.setDefaultAvatar();
       window.upload.resetUploadPhotos();
+      document.removeEventListener('keydown', onSuccessAdEscKeyDown);
     });
   };
 
@@ -135,7 +135,6 @@
     evt.preventDefault();
     adForm.reset();
     filtersForm.reset();
-    window.upload.setDefaultAvatar();
     window.utils.setInactiveState();
   });
 

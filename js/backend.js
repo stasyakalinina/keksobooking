@@ -28,6 +28,7 @@
     errorCloseBtn.addEventListener('click', function () {
       main.removeChild(errorAd);
       window.utils.setActiveState();
+      document.removeEventListener('keydown', onErrorEscKeyDown);
     });
   };
 

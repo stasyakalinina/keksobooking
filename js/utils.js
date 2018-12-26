@@ -77,12 +77,25 @@
     };
   };
 
+  var slicePins = function (arr) {
+    var pins = arr.slice();
+    arr.forEach(function (item) {
+      if (item.offer) {
+        pins.push(item);
+      }
+    });
+    pins = pins.slice(0, window.map.pinsLimit);
+
+    return pins;
+  };
+
   window.utils = {
     enter: ENTER_KEYCODE,
     esc: ESC_KEYCODE,
     setActiveState: setActiveState,
     setInactiveState: setInactiveState,
     returnMainPin: returnMainPin,
-    debounce: debounce
+    debounce: debounce,
+    slicePins: slicePins
   };
 })();
