@@ -18,7 +18,7 @@
       });
 
       if (matches) {
-        var reader = new FileReader();
+        let reader = new FileReader();
 
         reader.addEventListener('load', function () {
           if (!previewPhotoBlock.children.length) {
