@@ -134,6 +134,8 @@
     adForm.reset();
     filtersForm.reset();
     window.utils.setInactiveState();
+    window.upload.setDefaultAvatar();
+    window.upload.resetUploadPhotos();
   });
 
   window.form = {
