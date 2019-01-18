@@ -60,7 +60,7 @@
         reader.addEventListener('load', function () {
           if (!photoPreviewBlock.children.length) {
             createImageBlock(reader);
-          } else {
+          } else if (photosPreviewContainer.children.length < MAX_PHOTO)  {
             createImageBlock(reader);
             photosPreviewContainer.appendChild(photoPreviewBlock);
             console.log(photosPreviewContainer.children);
