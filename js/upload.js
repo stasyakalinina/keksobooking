@@ -1,8 +1,9 @@
-'use strict';
+ 'use strict';
 
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var MAX_PHOTO = 11;
+  var PHOTOS_PREVIEW_BLOCK_AMOUNT = 2;
   var avatarField = window.form.adForm.querySelector('#avatar');
   var photosField = window.form.adForm.querySelector('#images');
   var avatarPreview = window.form.adForm.querySelector('.ad-form-header__preview');
@@ -41,11 +42,19 @@
     housePhoto.width = 70;
     housePhoto.height = 70;
     housePhoto.src = reader.result;
-    photoPreviewBlock.appendChild(housePhoto);
-  }
+
+    if (!photoPreviewBlock.children.length) {
+      photoPreviewBlock.appendChild(housePhoto);
+    } else if (photosPreviewContainer.children.length < MAX_PHOTO) {
+      photoPreviewBlock = document.createElement('div');
+      photoPreviewBlock.classList.add("ad-form__photo");
+      photosPreviewContainer.appendChild(photoPreviewBlock);
+      photoPreviewBlock.appendChild(housePhoto);
+    }
+      return photoPreviewBlock;
+  };
 
   var uploadPhotos = function () {
-
     for (var i = 0; i < photosField.files.length; i++) {
       var file = photosField.files[i];
       var fileName = file.name.toLowerCase();
@@ -56,15 +65,8 @@
 
       if (matches) {
         let reader = new FileReader();
-
         reader.addEventListener('load', function () {
-          if (!photoPreviewBlock.children.length) {
-            createImageBlock(reader);
-          } else if (photosPreviewContainer.children.length < MAX_PHOTO)  {
-            createImageBlock(reader);
-            photosPreviewContainer.appendChild(photoPreviewBlock);
-            console.log(photosPreviewContainer.children);
-          }
+          createImageBlock(reader);
           isUpload = true;
         });
         reader.readAsDataURL(file);
@@ -76,7 +78,16 @@
 
   var resetUploadPhotos = function () {
     if (isUpload) {
-      photoPreviewBlock.innerHTML = '';
+      if (photosPreviewContainer.children.length > PHOTOS_PREVIEW_BLOCK_AMOUNT) {
+        let obj = document.querySelectorAll('.ad-form__photo');
+        for (let i = 1; i < obj.length; i++) {
+         obj[i].remove();
+        }
+        obj[0].innerHTML = '';
+      }
+      else if (photosPreviewContainer.children.length === PHOTOS_PREVIEW_BLOCK_AMOUNT) {
+        photoPreviewBlock.innerHTML = '';
+      }
     }
   };
 
