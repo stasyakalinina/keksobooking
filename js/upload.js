@@ -47,7 +47,7 @@
       photoPreviewBlock.appendChild(housePhoto);
     } else if (photosPreviewContainer.children.length < MAX_PHOTO) {
       photoPreviewBlock = document.createElement('div');
-      photoPreviewBlock.classList.add("ad-form__photo");
+      photoPreviewBlock.classList.add('ad-form__photo');
       photosPreviewContainer.appendChild(photoPreviewBlock);
       photoPreviewBlock.appendChild(housePhoto);
     }
