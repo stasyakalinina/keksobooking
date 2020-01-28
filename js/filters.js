@@ -15,6 +15,7 @@
       end: Infinity
     }
   };
+
   var filtersForm = document.querySelector('.map__filters');
   var filtersElements = Array.from(filtersForm.children);
 
@@ -46,13 +47,27 @@
     }
   };
 
+  // var filterData = function (data) {
+  //   return data.filter(function (item) {
+  //     return filtersElements.every(function (filter) {
+  //       return (filter.value === 'any') ? true : filterRules[filter.id](item, filter);
+  //     });
+  //   });
+  // };
+
   var filterData = function (data) {
-    return data.filter(function (item) {
-      return filtersElements.every(function (filter) {
-        return (filter.value === 'any') ? true : filterRules[filter.id](item, filter);
-      });
-    });
-  };
+  // Finds data item matching current rules;
+  return data.filter( itemMatchesRules );
+}
+
+  function itemMatchesRules(item){
+    // Проверяем соответствует ли data item всем правилам
+    return filtersElements.every(filter => filterMatchesRules(filter, item) );
+  }
+
+  function filterMatchesRules(filter, item){
+    return (filter.value === 'any') ? true : filterRules[filter.id](item, filter);
+  }
 
   var onMapFiltersChange = window.utils.debounce(function () {
     window.map.removePins();
